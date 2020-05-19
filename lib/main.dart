@@ -1,4 +1,4 @@
-import 'package:bytebank/screens/transfer/list.dart';
+import 'package:bytebank/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(BytebankApp());
@@ -14,13 +14,7 @@ class BytebankApp extends StatelessWidget {
             buttonColor: Colors.blueAccent[700],
             textTheme: ButtonTextTheme.primary,
           )),
-      home: TransferList(),
+      home: Dashboard(),
     );
   }
 }
-
-
-
-
-
-

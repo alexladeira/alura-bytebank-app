@@ -1,6 +1,8 @@
+import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/dao/contact_dao.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact_form.dart';
+import 'package:bytebank/screens/transaction_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +18,7 @@ class _ContactListState extends State<ContactList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contacts'),
+        title: Text('Transfer'),
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
@@ -26,23 +28,23 @@ class _ContactListState extends State<ContactList> {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Text('Loading'),
-                  ],
-                ),
-              );
+              return Progress();
               break;
             case ConnectionState.active:
               break;
             case ConnectionState.done:
               final List<Contact> contacts = snapshot.data;
               return ListView.builder(
-                itemBuilder: (context, index) => _ContactItem(contacts[index]),
+                itemBuilder: (context, index) {
+                  final Contact contact = contacts[index];
+                  return _ContactItem(
+                    contact,
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => TransactionForm(contact)),
+                    ),
+                  );
+                },
                 itemCount: contacts.length,
               );
               break;
@@ -64,11 +66,13 @@ class _ContactListState extends State<ContactList> {
 
 class _ContactItem extends StatelessWidget {
   final Contact contact;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () => onTap(),
         title: Text(
           contact.name,
           style: TextStyle(fontSize: 24.0),
@@ -81,5 +85,5 @@ class _ContactItem extends StatelessWidget {
     );
   }
 
-  _ContactItem(this.contact);
+  _ContactItem(this.contact, {@required this.onTap});
 }

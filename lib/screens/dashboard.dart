@@ -7,47 +7,56 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Dashboard')),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Image.asset('images/bytebank_logo.png'),
-              Container(
-                height: 120,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
+      body: LayoutBuilder(
+        builder: (context, coinstraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: coinstraints.maxHeight),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _FeatureItem(
-                      'Transfer',
-                      Icons.monetization_on,
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ContactList(),
-                      )),
-                    ),
-                    _FeatureItem(
-                      'Transaction feed',
-                      Icons.description,
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => TransactionsList(),
-                      )),
-                    ),
-                  ],
-                ),
-              )
-            ]),
+                    Image.asset('images/bytebank_logo.png'),
+                    Container(
+                      height: 120,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          FeatureItem(
+                            'Transfer',
+                            Icons.monetization_on,
+                            onTap: () =>
+                                Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ContactList(),
+                            )),
+                          ),
+                          FeatureItem(
+                            'Transaction feed',
+                            Icons.description,
+                            onTap: () =>
+                                Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => TransactionsList(),
+                            )),
+                          ),
+                        ],
+                      ),
+                    )
+                  ]),
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
-class _FeatureItem extends StatelessWidget {
+class FeatureItem extends StatelessWidget {
   final String name;
   final IconData icon;
   final Function onTap;
 
-  _FeatureItem(this.name, this.icon, {@required this.onTap})
+  FeatureItem(this.name, this.icon, {@required this.onTap})
       : assert(icon != null),
         assert(onTap != null);
 
